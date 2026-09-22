@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wire instructions — Radius</title>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="_ds/radius-ui-design-system-c7220bb1-3534-4549-94e9-dd1c4d80b981/tokens/fonts.css">
+<link rel="stylesheet" href="assets/list-page.css">
+<style>
+.pg-titlewrap { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+.pg-subtitle { font:400 13px/1.35 var(--font); color:var(--muted-foreground); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wire-scroll { padding-top:14px; }
+.wire-card { padding:2px 0 0; }
+.wire-form { display:flex; flex-direction:column; gap:16px; }
+.field { display:flex; flex-direction:column; gap:7px; }
+.field label { font:600 14px/1.25 var(--font); color:var(--foreground); }
+.required { color:#ff8080; }
+.control-wrap { position:relative; }
+.control { width:100%; min-height:50px; border:1px solid rgba(255,255,255,.09); border-radius:16px; background:rgba(255,255,255,.07); color:var(--foreground); padding:0 15px; font:500 16px/1.2 var(--font); outline:none; box-shadow:inset 0 1px 0 rgba(255,255,255,.04); }
+.control::placeholder { color:var(--muted-foreground); opacity:.78; font-weight:400; }
+textarea.control { min-height:88px; padding:13px 14px; resize:vertical; }
+.control:focus { border-color:rgba(123,127,245,.72); background:rgba(255,255,255,.095); box-shadow:0 0 0 3px rgba(90,95,242,.18), inset 0 1px 0 rgba(255,255,255,.06); }
+select.control { appearance:none; -webkit-appearance:none; padding-right:42px; cursor:pointer; }
+.select-icon { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--muted-foreground); pointer-events:none; font-size:17px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.section-line { height:1px; background:var(--border); margin:2px 0; }
+.wire-actions { position:sticky; bottom:0; display:flex; gap:10px; margin:2px -8px 8px; padding:10px 8px; border:1px solid rgba(255,255,255,.09); border-radius:24px; background:rgba(28,28,30,.72); box-shadow:0 10px 30px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08); backdrop-filter:blur(24px) saturate(170%); -webkit-backdrop-filter:blur(24px) saturate(170%); }
+.wire-btn { flex:1; min-height:48px; border:1px solid rgba(255,255,255,.11); border-radius:999px; background:rgba(255,255,255,.08); color:var(--foreground); font:600 15px/1 var(--font); box-shadow:inset 0 1px 0 rgba(255,255,255,.08); cursor:pointer; }
+.wire-btn.primary { border-color:rgba(154,157,255,.48); background:rgba(90,95,242,.82); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 6px 18px rgba(56,60,190,.24); }
+.wire-btn:active { transform:scale(.98); }
+.wire-btn:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
+.toast { bottom:28px; }
+@media (max-width:420px) { body { padding:0; background:var(--background); } .phone { width:100vw; height:100dvh; border-radius:0; } }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="screen" data-screen-label="Wire instructions">
+    <div class="statusbar"><span>9:41</span><div class="sb-icons"><svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="5" width="3" height="7" rx="1"/><rect x="9" y="2.5" width="3" height="9.5" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity="0.7"/></svg><svg width="20" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor"><rect x="1" y="1" width="17" height="10" rx="3"/><rect x="3" y="3" width="11" height="6" rx="1.5" fill="currentColor" stroke="none"/><path d="M20 4v4" stroke-linecap="round"/></svg></div></div>
+    <div class="pg-head">
+      <a href="Commission breakdown.html" class="back-btn" id="backLink" aria-label="Back to detailed breakdown"><i class="ph ph-caret-left" aria-hidden="true"></i></a>
+      <div class="pg-titlewrap"><h1>Wire instructions</h1><div class="pg-subtitle" id="feeName">Payment details</div></div>
+    </div>
+    <main class="scroll wire-scroll">
+      <form class="wire-card wire-form" id="wireForm">
+        <div class="field"><label for="wireType">Wire Type</label><div class="control-wrap"><select class="control" id="wireType"><option value="radius" selected>Radius</option><option value="external">External</option><option value="team">Team</option><option value="agent">Agent</option></select><i class="ph ph-caret-down select-icon" aria-hidden="true"></i></div></div>
+        <div class="field"><label for="recipient">Recipient / Account Holder Name <span class="required">*</span></label><input class="control" id="recipient" placeholder="e.g. Radius Agent Realty" autocomplete="name" required></div>
+        <div class="grid"><div class="field"><label for="email">Email</label><input class="control" id="email" type="email" placeholder="name@example.com" autocomplete="email"></div><div class="field"><label for="phone">Phone</label><input class="control" id="phone" type="tel" placeholder="(555) 123-4567" autocomplete="tel"></div></div>
+        <div class="field"><label for="street">Street Address</label><input class="control" id="street" placeholder="123 Main St" autocomplete="street-address"></div>
+        <div class="grid"><div class="field"><label for="city">City</label><input class="control" id="city" placeholder="Austin" autocomplete="address-level2"></div><div class="field"><label for="state">State</label><input class="control" id="state" placeholder="TX" autocomplete="address-level1"></div></div>
+        <div class="field"><label for="zip">ZIP</label><input class="control" id="zip" inputmode="numeric" placeholder="78701" autocomplete="postal-code"></div>
+        <div class="section-line" aria-hidden="true"></div>
+        <div class="field"><label for="bank">Bank Name</label><input class="control" id="bank" placeholder="e.g. Chase Bank"></div>
+        <div class="grid"><div class="field"><label for="routing">Routing Number (ABA)</label><input class="control" id="routing" inputmode="numeric" placeholder="123456789" maxlength="9"></div><div class="field"><label for="account">Account Number</label><input class="control" id="account" inputmode="numeric" placeholder="1234567890"></div></div>
+        <div class="field"><label for="accountType">Account Type</label><div class="control-wrap"><select class="control" id="accountType"><option value="checking">Checking</option><option value="savings">Savings</option></select><i class="ph ph-caret-down select-icon" aria-hidden="true"></i></div></div>
+        <div class="field"><label for="memo">Special Instructions / Memo</label><textarea class="control" id="memo" placeholder="e.g. Include property address"></textarea></div>
+        <div class="wire-actions"><button class="wire-btn" type="button" id="cancelBtn">Cancel</button><button class="wire-btn primary" type="submit">Save</button></div>
+      </form>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite">Wire instructions saved</div>
+  </div>
+</div>
+<script>
+var params = new URLSearchParams(window.location.search);
+var fee = params.get('fee');
+if (fee) document.getElementById('feeName').textContent = fee;
+var returnFile = params.get('return') || 'Commission breakdown.html';
+params.delete('fee'); params.delete('return');
+var backUrl = returnFile + (params.toString() ? '?' + params.toString() : '') + '#detailed';
+document.getElementById('backLink').href = backUrl;
+document.getElementById('cancelBtn').addEventListener('click', function () { window.location.href = backUrl; });
+document.getElementById('routing').addEventListener('input', function () { this.value = this.value.replace(/\D/g, '').slice(0, 9); });
+document.getElementById('account').addEventListener('input', function () { this.value = this.value.replace(/\D/g, ''); });
+document.getElementById('wireForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+  var toast = document.getElementById('toast'); toast.classList.add('show');
+  window.setTimeout(function () { window.location.href = backUrl; }, 700);
+});
+</script>
+</body>
+</html>

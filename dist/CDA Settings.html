@@ -17,6 +17,8 @@
 .st-value { flex:none; font:400 15px/1.2 var(--font); color:var(--muted-foreground); margin-right:2px; }
 .st-chev { flex:none; font-size:17px; color:var(--muted-foreground); opacity:.7; }
 .st-row:focus-visible { outline:2px solid var(--ring); outline-offset:-2px; border-radius:var(--radius-sm); }
+.st-row:not(a) { cursor:default; }
+.st-row:not(a):active { transform:none; background:transparent; }
 .st-pill { flex:none; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:var(--warning); color:#fff; font:700 12px/20px var(--font); text-align:center; }
 .pg-titlewrap { flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
 .pg-subtitle { font:400 13px/1.4 var(--font); color:var(--muted-foreground); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -56,7 +58,7 @@ body { gap:22px; flex-wrap:wrap; }
     </div>
 
     <div class="pg-head">
-      <a href="Settings.html" class="back-btn" aria-label="Back to settings">
+      <a href="Implemented Home.html" class="back-btn" aria-label="Back to home">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
       </a>
       <div class="pg-titlewrap">
@@ -68,26 +70,26 @@ body { gap:22px; flex-wrap:wrap; }
     <div class="scroll st-scroll">
       <div class="agent-note" id="agentNote" hidden><i class="ph ph-info"></i><p>Commission plans and fees are managed by your Team Lead. You can still view and update your own wiring payment details below.</p></div>
       <div class="st-grp gcard">
-        <a class="st-row" href="Group Lead Plan Creation.html" data-roles="teamlead">
+        <div class="st-row" data-roles="teamlead">
           <span class="st-label">Group Lead Plan Creation</span>
           <i class="ph ph-caret-right st-chev" aria-hidden="true"></i>
-        </a>
-        <a class="st-row" href="Commission Plan.html" data-roles="teamlead,grouplead">
+        </div>
+        <div class="st-row" data-roles="teamlead,grouplead">
           <span class="st-label">Commission Plan</span>
           <i class="ph ph-caret-right st-chev" aria-hidden="true"></i>
-        </a>
-        <a class="st-row" href="Fee Type.html" data-roles="teamlead,grouplead">
+        </div>
+        <div class="st-row" data-roles="teamlead,grouplead">
           <span class="st-label">Fee Type</span>
           <i class="ph ph-caret-right st-chev" aria-hidden="true"></i>
-        </a>
-        <a class="st-row" href="Post Cap Plan.html" data-roles="teamlead,grouplead">
+        </div>
+        <div class="st-row" data-roles="teamlead,grouplead">
           <span class="st-label">Post Cap Plan</span>
           <i class="ph ph-caret-right st-chev" aria-hidden="true"></i>
-        </a>
-        <a class="st-row" href="Wiring Payment.html" data-roles="teamlead,grouplead,agent">
+        </div>
+        <div class="st-row" data-roles="teamlead,grouplead,agent">
           <span class="st-label">Wiring Payment</span>
           <i class="ph ph-caret-right st-chev" aria-hidden="true"></i>
-        </a>
+        </div>
       </div>
     </div>
   </div>
