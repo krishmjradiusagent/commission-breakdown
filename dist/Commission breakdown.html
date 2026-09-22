@@ -340,7 +340,8 @@ button.side { cursor:pointer; text-align:left; }
 @keyframes sbin { from { opacity:0; transform:translateY(-4px); } }
 .srow { display:flex; align-items:center; gap:10px; width:100%; min-height:44px; padding:9px 0 9px 2px; border:0; border-top:1px solid var(--border); background:transparent; color:var(--foreground); font-family:inherit; text-align:left; transition:background 140ms var(--ease-out); }
 .srow .sk { min-width:0; flex:1; display:flex; flex-direction:column; gap:2px; }
-.srow .sk b { font:500 15px/1.25 var(--font); }
+.srow .sk b { display:inline-flex; align-items:center; gap:6px; font:500 15px/1.25 var(--font); }
+.srow .sk b .fee-missing { flex:none; font-size:15px; color:var(--tint-amber-fg); }
 .srow .sk em { font:500 13px/1.3 var(--font); font-style:normal; color:var(--muted-foreground); }
 .srow .svv { flex:none; min-width:84px; text-align:right; font:600 15px/1.2 var(--font); font-variant-numeric:tabular-nums; }
 .srow .chev { flex:none; width:15px; font-size:15px; color:var(--muted-foreground); transition:transform 160ms var(--ease-out), color 140ms var(--ease-out); }
@@ -389,7 +390,7 @@ button.agentrow[aria-expanded="true"] .achev { transform:rotate(90deg); }
 .prow.ptot { margin-top:4px; padding-top:9px; border-top:1px solid var(--border); }
 .prow.ptot .pk { color:var(--foreground); font-weight:600; font-size:15px; }
 .prow.ptot .pv { font:600 15px/1.2 var(--font); color:var(--tint-green-fg); }
-.agentrow { display:flex; align-items:center; gap:10px; padding:11px 25px 11px 2px; border-top:1px solid var(--border); color:var(--foreground); text-decoration:none; }
+.agentrow { display:flex; align-items:center; gap:10px; padding:11px 0 11px 2px; border-top:1px solid var(--border); color:var(--foreground); text-decoration:none; }
 a.agentrow:active { background:var(--overlay-press); }
 a.agentrow:focus-visible { outline:2px solid var(--ring); outline-offset:-2px; border-radius:var(--radius-sm); }
 .agentrow .ini { width:28px; height:28px; font:600 12px/1 var(--font); background:var(--tint-indigo-bg); color:var(--tint-indigo-fg); }
@@ -453,6 +454,29 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .capstack-toggle[aria-expanded="true"] i { transform:rotate(180deg); }
 .capstack-toggle:focus-visible { outline:2px solid var(--ring); outline-offset:3px; border-radius:4px; }
 .capstack-toggle:active { opacity:.72; }
+.agent-detail-page .capstack { margin:8px 0 4px; padding:12px; border-radius:20px; }
+.agent-detail-page .capstack-body { grid-template-columns:minmax(0,1fr); gap:8px; }
+.agent-detail-page .capstack-body > .cap { min-height:142px; padding:12px; }
+.agent-detail-page .capstack-stacked .capstack-body { gap:0; }
+.agent-detail-page .capstack-stacked .capstack-body > .cap { transition:margin-top 260ms var(--ease-out),transform 260ms var(--ease-out); }
+.agent-detail-page .capstack-stacked .capstack-body > .cap:first-child { position:relative; z-index:2; }
+.agent-detail-page .capstack-stacked .capstack-body > .cap:nth-child(2) { position:relative; z-index:1; margin-top:-122px; transform:scaleX(.9); }
+.agent-detail-page .capstack-stacked[data-expanded="true"] .capstack-body { gap:8px; }
+.agent-detail-page .capstack-stacked[data-expanded="true"] .capstack-body > .cap:nth-child(2) { margin-top:0; transform:scaleX(1); }
+.agent-detail-page .cap .cph { align-items:flex-start; gap:5px; }
+.agent-detail-page .cap .cn { font-size:13px; }
+.agent-detail-page .cap .cstat { font-size:11px; }
+.agent-detail-page .cap .cmeta { font-size:14px; white-space:normal; }
+.agent-detail-page .cap .cfee { flex-direction:column; align-items:flex-start; gap:2px; }
+.agent-detail-page .cap .cfee .v { text-align:left; font-size:12px; }
+.agent-detail-page #agent-detail-plans { padding:8px 0 12px; }
+.agent-detail-page .relationship-stack { gap:16px; }
+.agent-plan-toggle { display:flex; align-items:center; gap:10px; width:100%; min-height:44px; padding:0; border:0; background:transparent; color:var(--foreground); font-family:var(--font); text-align:left; cursor:pointer; }
+.agent-plan-toggle span { flex:1; min-width:0; font:500 15px/1.3 var(--font); }
+.agent-plan-toggle i { flex:none; font-size:16px; color:var(--muted-foreground); transition:transform 180ms var(--ease-out); }
+.agent-plan-toggle[aria-expanded="true"] i { transform:rotate(180deg); }
+.agent-plan-toggle:focus-visible { outline:2px solid var(--ring); outline-offset:2px; border-radius:8px; }
+.post-cap-select:disabled { cursor:default; opacity:.56; }
 .phead { margin-top:8px; padding:14px 0 9px; border-top:1px solid var(--border); font:600 12px/1.2 var(--font); letter-spacing:.02em; color:var(--muted-foreground); }
 .popttl { margin:0 0 7px; font:600 13px/1.25 var(--font); color:var(--foreground); }
 .poprow { display:flex; align-items:baseline; gap:10px; padding:4px 0; }
@@ -1072,6 +1096,8 @@ button.ybd-r:active { opacity:.7; }
 .ybd-det button.d.grp { gap:6px; }
 .ybd-det button.d.grp .expand-mark { width:18px; margin-right:0; text-align:left; }
 .ybd-det button.d.grp > span { gap:4px; flex-wrap:nowrap; white-space:nowrap; }
+.ybd-det button.d.grp > span.detail-info-key { gap:0; }
+.ybd-det button.d.grp .detail-info { flex:none; display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; margin-left:3px; color:var(--muted-foreground); font-size:15px; line-height:1; transform:translateY(1.5px); }
 /* Plan & assumptions is the plan door and the reference line, not the edit home */
 /* literal, not --glass-border: that token self-resolves to nothing in the dark
    block on this screen, so the rule was there but never drew */
@@ -1250,7 +1276,8 @@ button.ybd-r:active { opacity:.7; }
 .side-award { display:inline-flex; align-items:center; gap:4px; min-height:24px; max-width:132px; padding:0 7px; border:1px solid color-mix(in srgb,var(--primary) 45%,transparent);
   border-radius:999px; background:var(--tint-indigo-bg); color:var(--tint-indigo-fg);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:600 10.5px/1 var(--font); cursor:pointer; }
-.side-award::after { content:'›'; flex:none; font:700 14px/1 var(--font); opacity:.72; }
+.side-award-label { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+.side-award-arrow { display:inline-flex; flex:none; align-items:center; justify-content:center; width:12px; height:12px; font-size:13px; line-height:1; opacity:.72; }
 .side-award:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
 .side-award:active { transform:scale(.97); }
 .side-metrics { --metric-spring:linear(0,.147,.413,.68,.874,1.005,1.034,1.025,1.011,1.002,1);
@@ -1276,20 +1303,28 @@ button.ybd-r:active { opacity:.7; }
 .side-metric.gross,
 .side-metric.after-deductions,
 .side-metric.to-agents,
+.side-metric.to-team,
 .side-metric.rest-group { border-color:var(--lux-card-border); background-color:var(--lux-card-surface); }
 .side-metric.after-deductions,
+.side-metric.to-team,
 .rest-metrics .side-metric:nth-child(even) { background-color:var(--lux-card-surface-alt); }
 .side-metric.gross > span:first-child,
 .side-metric.after-deductions > span:first-child,
 .side-metric.to-agents > span:first-child,
+.side-metric.to-team > span:first-child,
 .side-metric.rest-group > span:first-child { color:var(--lux-label); }
 .side-metric.gross > span:first-child i,
 .side-metric.after-deductions > span:first-child i,
-.side-metric.to-agents > span:first-child i { color:var(--lux-accent); }
+.side-metric.to-agents > span:first-child i,
+.side-metric.to-team > span:first-child i { color:var(--lux-accent); }
 .side-metric.gross b,
 .side-metric.after-deductions b,
 .side-metric.to-agents b,
+.side-metric.to-team b,
 .side-metric.rest-group b { color:var(--lux-value); }
+/* The side statement begins with the same four-way commission allocation used
+   in the reference: gross, deductions, agents, then team. Keep this visual
+   grouping separate from the lower calculation rows. */
 .side-metric-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:28px; margin-top:10px; color:var(--muted-foreground); }
 .side-metric-summary { display:inline-flex; align-items:center; gap:8px; min-width:0; font:600 12px/1.2 var(--font); }
 .side-metric-count { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:999px;
@@ -1324,16 +1359,15 @@ button.ybd-r:active { opacity:.7; }
 .relationship-plan-row .pk { display:flex; align-items:center; gap:5px; color:var(--muted-foreground); }
 .relationship-plan-row .pv { min-width:0; max-width:62%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; }
 .relationship-plan-row .ibtn { color:var(--muted-foreground); }
-.post-cap-host { position:relative; width:100%; min-width:0; margin:8px 0 4px; }
-.post-cap-plans { display:grid; gap:6px; width:100%; min-width:0; }
-.post-cap-label { padding:2px 0 1px; color:var(--muted-foreground); font:600 12px/1.2 var(--font); }
+.post-cap-host { position:relative; width:100%; min-width:0; margin:0 0 4px; }
+.post-cap-plans { display:grid; gap:16px; width:100%; min-width:0; }
+.post-cap-field { display:grid; gap:6px; min-width:0; }
+.post-cap-label { color:var(--muted-foreground); font:600 13px/1.2 var(--font); }
 .post-cap-picker { position:relative; display:block; width:100%; min-width:0; }
-.post-cap-select { display:flex; align-items:center; gap:10px; width:100%; min-width:0; min-height:54px; padding:8px 10px;
+.post-cap-select { display:flex; align-items:center; gap:10px; width:100%; min-width:0; min-height:44px; padding:0 12px;
   box-sizing:border-box; border:1px solid var(--border); border-radius:12px; background:var(--muted); color:var(--foreground); text-align:left; cursor:pointer; }
-.post-cap-select-copy { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
-.post-cap-select-copy small { color:var(--muted-foreground); font:500 12px/1.2 var(--font); }
+.post-cap-select-copy { flex:1; min-width:0; }
 .post-cap-select-copy b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:600 14px/1.25 var(--font); }
-.post-cap-select-copy span { color:var(--muted-foreground); font:500 12px/1.2 var(--font); }
 .post-cap-select > i { flex:none; color:var(--muted-foreground); font-size:15px; transition:transform 180ms var(--ease-out); }
 .post-cap-picker.open .post-cap-select > i { transform:rotate(180deg); }
 .post-cap-select:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
@@ -1558,20 +1592,21 @@ body { position:relative; gap:0; }
           <button class="sgo" type="button" aria-expanded="false" aria-controls="sbody1" aria-label="Toggle listing side"></button>
           <span class="sb">
             <span class="st" id="s1Title">Listing side</span>
-            <span class="sm"><span id="s1Sub">Your side</span><button class="side-award" type="button" data-award="mine" aria-label="Edit listing-side award">Award 1% + $1K</button></span>
+            <span class="sm"><span id="s1Sub">Your side</span><button class="side-award" type="button" data-award="mine" aria-label="Edit listing-side award"><span class="side-award-label">Award 1% + $1K</span><i class="ph ph-caret-right side-award-arrow" aria-hidden="true"></i></button></span>
           </span>
           <span class="sv"><b id="s1Val">$49,500</b></span>
           <i class="ph ph-caret-right sidechev" aria-hidden="true"></i>
         </div>
         <div class="sidebody" id="sbody1" hidden>
-          <div class="side-metrics" data-expanded="false">
+          <div class="side-metrics side-summary rest-metrics" data-expanded="false">
             <div class="side-metric-list" id="metricList1" aria-label="Side summary totals">
               <div class="side-metric gross"><span><span class="metric-badge" data-mark="$" aria-hidden="true"><i class="ph ph-seal"></i></span>Gross</span><b id="m1Gross">$49,500</b></div>
               <div class="side-metric after-deductions"><span><span class="metric-badge" data-mark="i" aria-hidden="true"><i class="ph ph-seal"></i></span>After deductions</span><b id="m1After">$49,430</b></div>
               <div class="side-metric to-agents"><span><i class="ph ph-user" aria-hidden="true"></i>To agents</span><b id="m1Agents">$39,544</b></div>
+              <div class="side-metric to-team"><span><i class="ph ph-buildings" aria-hidden="true"></i>To team</span><b id="m1Team">$10,386</b></div>
             </div>
             <div class="side-metric-foot">
-              <span class="side-metric-summary"><span class="side-metric-count">3</span>Commission totals</span>
+              <span class="side-metric-summary"><span class="side-metric-count">4</span>Commission totals</span>
               <button class="side-metric-toggle" type="button" aria-expanded="false" aria-controls="metricList1"><span>View all</span><i class="ph ph-caret-down" aria-hidden="true"></i></button>
             </div>
           </div>
@@ -1585,7 +1620,7 @@ body { position:relative; gap:0; }
             <span class="ab"><b>Add pre-split deduction</b></span>
           </button>
           <div class="srow tot plain">
-            <span class="sk"><b>Gross after deductions</b><em>What the splits are taken from</em></span>
+            <span class="sk"><b>Gross after deductions</b></span>
             <span class="svv" id="x1Basis">$49,430</span>
           </div>
         <div class="ssub">Agents on this side</div>
@@ -1614,7 +1649,7 @@ body { position:relative; gap:0; }
           <button class="sgo" type="button" aria-expanded="false" aria-controls="sbody2" aria-label="Toggle buying side"></button>
           <span class="sb">
             <span class="st" id="s2Title">Buying side</span>
-            <span class="sm"><span id="s2Sub">Jeanne Gould</span><button class="side-award" type="button" data-award="other" aria-label="Edit buying-side award">Award 1%</button></span>
+            <span class="sm"><span id="s2Sub">Jeanne Gould</span><button class="side-award" type="button" data-award="other" aria-label="Edit buying-side award"><span class="side-award-label">Award 1%</span><i class="ph ph-caret-right side-award-arrow" aria-hidden="true"></i></button></span>
           </span>
           <span class="sv"><b id="s2Val">$49,500</b></span>
           <i class="ph ph-caret-right sidechev" aria-hidden="true"></i>
@@ -1633,7 +1668,7 @@ body { position:relative; gap:0; }
           </div>
           <div id="deds2"></div>
           <div class="srow tot plain">
-            <span class="sk"><b>Gross after deductions</b><em>What the splits are taken from</em></span>
+            <span class="sk"><b>Gross after deductions</b></span>
             <span class="svv" id="x2Basis">$49,430</span>
           </div>
         <div class="ssub">Agents on this side</div>
@@ -2440,7 +2475,10 @@ Thanks</textarea></div>
       var al = document.createElement('button'); al.type = 'button'; al.className = 'side-award agent-alloc';
       al.setAttribute('data-agentalloc', o.side); al.setAttribute('aria-haspopup', 'dialog');
       al.setAttribute('aria-label', 'Edit allocation for ' + o.name); al.disabled = isFinalizedStatus(status);
-      al.textContent = Number(o.allocation).toFixed(Number(o.allocation) % 1 ? 2 : 0) + '%';
+      var awardLabel = document.createElement('span'); awardLabel.className = 'side-award-label'; awardLabel.textContent = Number(o.allocation).toFixed(Number(o.allocation) % 1 ? 2 : 0) + '%';
+      al.appendChild(awardLabel);
+      var awardArrow = document.createElement('i'); awardArrow.className = 'ph ph-caret-right side-award-arrow'; awardArrow.setAttribute('aria-hidden', 'true');
+      al.appendChild(awardArrow);
       ml.appendChild(al);
     }
     ab.appendChild(ml); ab.appendChild(em);
@@ -2496,6 +2534,17 @@ Thanks</textarea></div>
       if (r.relationships) {
         el = document.createElement('div'); el.className = 'relationship-stack';
         r.relationships.forEach(function (rel) {
+          if (o.id === 'agent-detail-plans') {
+            var field = document.createElement('div'); field.className = 'post-cap-field standard-plan-field';
+            var label = document.createElement('div'); label.className = 'post-cap-label'; label.textContent = r.relationships.length === 1 ? 'Standard plan' : rel.k + ' plan';
+            var standard = document.createElement('button'); standard.type = 'button'; standard.className = 'post-cap-select'; standard.disabled = true;
+            standard.setAttribute('aria-label', label.textContent + ': ' + rel.commissionPlan);
+            var standardCopy = document.createElement('span'); standardCopy.className = 'post-cap-select-copy';
+            var standardName = document.createElement('b'); standardName.textContent = rel.commissionPlan;
+            var standardCaret = document.createElement('i'); standardCaret.className = 'ph ph-caret-down'; standardCaret.setAttribute('aria-hidden', 'true');
+            standardCopy.appendChild(standardName); standard.appendChild(standardCopy); standard.appendChild(standardCaret);
+            field.appendChild(label); field.appendChild(standard); el.appendChild(field); return;
+          }
           var row = document.createElement('div'); row.className = 'prow relationship-plan-row';
           var key = document.createElement('span'); key.className = 'pk'; key.appendChild(document.createTextNode('Plan'));
           var info = document.createElement('button'); info.type = 'button'; info.className = 'ibtn';
@@ -2542,7 +2591,7 @@ Thanks</textarea></div>
           d.appendChild(el); return;
         }
         var capListId = o.id + '-caps', capOpen = !!openCapStacks[o.id];
-        el = document.createElement('div'); el.className = 'capstack'; el.setAttribute('data-expanded', String(capOpen));
+        el = document.createElement('div'); el.className = 'capstack' + (o.id === 'agent-detail-plans' ? ' capstack-stacked' : ''); el.setAttribute('data-expanded', String(capOpen));
         var capBody = document.createElement('div'); capBody.className = 'capstack-body'; capBody.id = capListId;
         r.caps.forEach(function (c, capIndex) {
           var card = capEl(c);
@@ -2550,7 +2599,7 @@ Thanks</textarea></div>
           capBody.appendChild(card);
         });
         el.appendChild(capBody);
-        if (r.caps.length > 2) {
+        if (r.caps.length > 2 || (o.id === 'agent-detail-plans' && r.caps.length > 1)) {
           var capFoot = document.createElement('div'); capFoot.className = 'capstack-foot';
           var capSummary = document.createElement('span'); capSummary.className = 'capstack-summary';
           var capCount = document.createElement('b'); capCount.textContent = r.caps.length;
@@ -2565,11 +2614,18 @@ Thanks</textarea></div>
                 extras = Array.prototype.slice.call(capBody.querySelectorAll('.capstack-extra')),
                 startHeight = capBody.getBoundingClientRect().height,
                 firstCards = Array.prototype.slice.call(capBody.querySelectorAll('.cap')).slice(0, 2),
-                collapsedHeight = firstCards.reduce(function (height, card) { return height + card.getBoundingClientRect().height; }, 0) + 8;
+                twoColumn = getComputedStyle(capBody).gridTemplateColumns.split(' ').length > 1,
+                collapsedHeight = firstCards.reduce(function (height, card) {
+                  return twoColumn ? Math.max(height, card.getBoundingClientRect().height) : height + card.getBoundingClientRect().height;
+                }, 0) + (twoColumn ? 0 : 8);
             openCapStacks[o.id] = next;
             capToggle.setAttribute('aria-expanded', String(next));
             capToggleText.textContent = next ? 'Show less' : 'Show more';
             el.setAttribute('data-expanded', String(next));
+            if (el.classList.contains('capstack-stacked')) {
+              extras.forEach(function (card) { card.hidden = !next; });
+              return;
+            }
             if (next) extras.forEach(function (card) { card.hidden = false; });
             var endHeight = next ? capBody.scrollHeight : collapsedHeight;
             if (!capBody.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -2872,17 +2928,17 @@ Thanks</textarea></div>
     return plans;
   }
   function postCapPicker(kind) {
+    var field = document.createElement('div'); field.className = 'post-cap-field';
+    var label = document.createElement('div'); label.className = 'post-cap-label'; label.textContent = kind === 'group' ? 'Group post-cap plan' : 'Team post-cap plan';
     var anchor = document.createElement('span'); anchor.className = 'post-cap-picker';
     var plan = selectedPostCap(kind);
     var change = document.createElement('button'); change.type = 'button'; change.className = 'post-cap-select';
     change.setAttribute('data-postcap-change', kind);
     change.setAttribute('aria-haspopup', 'listbox'); change.setAttribute('aria-expanded', 'false');
     var current = document.createElement('span'); current.className = 'post-cap-select-copy';
-    var type = document.createElement('small'); type.textContent = kind === 'group' ? 'Group post-cap plan' : 'Team post-cap plan';
     var name = document.createElement('b'); name.textContent = plan.name;
-    var formula = document.createElement('span'); formula.textContent = plan.formula;
     var caret = document.createElement('i'); caret.className = 'ph ph-caret-down'; caret.setAttribute('aria-hidden', 'true');
-    current.appendChild(type); current.appendChild(name); current.appendChild(formula); change.appendChild(current); change.appendChild(caret);
+    current.appendChild(name); change.appendChild(current); change.appendChild(caret);
     var menu = document.createElement('div'); menu.className = 'plan-drop rds-combobox__panel'; menu.hidden = true;
     menu.setAttribute('data-postcap-menu', kind); menu.setAttribute('role', 'dialog');
     menu.setAttribute('aria-label', 'Choose ' + kind + ' post-cap plan');
@@ -2908,15 +2964,13 @@ Thanks</textarea></div>
     var addIcon = document.createElement('i'); addIcon.className = 'ph ph-plus-circle'; addIcon.setAttribute('aria-hidden', 'true');
     add.appendChild(addIcon); add.appendChild(document.createTextNode('Add post-cap plan'));
     menu.appendChild(list); menu.appendChild(add); anchor.appendChild(change); anchor.appendChild(menu);
-    return anchor;
+    field.appendChild(label); field.appendChild(anchor); return field;
   }
   function renderPostCapBanner(host) {
     var plans = activePostCapPlans();
     host.textContent = ''; host.hidden = !plans.length;
     if (!plans.length) return;
     var list = document.createElement('section'); list.className = 'post-cap-plans';
-    var label = document.createElement('div'); label.className = 'post-cap-label'; label.textContent = 'Post-cap plans';
-    list.appendChild(label);
     plans.forEach(function (entry) {
       list.appendChild(postCapPicker(entry.kind));
     });
@@ -3027,13 +3081,17 @@ Thanks</textarea></div>
     document.getElementById('m1Gross').textContent = cur(sideGross);
     document.getElementById('m1After').textContent = cur(basis);
     document.getElementById('m1Agents').textContent = cur(agentsPaid);
+    document.getElementById('m1Team').textContent = cur(teamNet);
     document.getElementById('m2Gross').textContent = cur(otherGross);
     document.getElementById('m2After').textContent = cur(otherGross - otherDed);
     document.getElementById('m2Agents').textContent = cur(otherGross - otherDed);
     Array.prototype.forEach.call(document.querySelectorAll('[data-award]'), function (b) {
       var a = AWARD[b.getAttribute('data-award')], bits = ['Award ' + a.pct + '%'];
       if (a.flat) bits.push('+ ' + compactCur(a.flat));
-      b.textContent = bits.join(' ');
+      b.textContent = '';
+      var awardLabel = document.createElement('span'); awardLabel.className = 'side-award-label'; awardLabel.textContent = bits.join(' ');
+      var awardChevron = document.createElement('i'); awardChevron.className = 'ph ph-caret-right side-award-arrow'; awardChevron.setAttribute('aria-hidden', 'true');
+      b.appendChild(awardLabel); b.appendChild(awardChevron);
       var sideLabel = b.getAttribute('data-award') === 'mine' ? myTitle : coopTitle;
       b.setAttribute('aria-label', 'Edit ' + sideLabel.toLowerCase() + ' award: ' + bits.join(' '));
     });
@@ -4230,7 +4288,7 @@ Thanks</textarea></div>
       detailTrigger = null,
       detailEditing = false;
   screenEl.appendChild(detailPage);
-  var agentDetailPage = document.createElement('div'), agentDetailTrigger = null, agentDetailSelection = null, agentDetailEditing = false, agentDetailSeq = 0;
+  var agentDetailPage = document.createElement('div'), agentDetailTrigger = null, agentDetailSelection = null, agentDetailEditing = false, agentDetailSeq = 0, agentPlanOpen = true;
   agentDetailPage.id = 'agentDetailPage'; agentDetailPage.className = 'detail-page agent-detail-page';
   agentDetailPage.hidden = true; agentDetailPage.setAttribute('role', 'dialog');
   agentDetailPage.setAttribute('aria-modal', 'true'); agentDetailPage.setAttribute('aria-labelledby', 'agentDetailTitle');
@@ -4248,8 +4306,10 @@ Thanks</textarea></div>
     var key = document.createElement('span'); key.textContent = label;
     if (countLabel) { var count = document.createElement('em'); count.textContent = rows.length + ' ' + countLabel; key.appendChild(count); }
     var amount = document.createElement('b'); amount.textContent = total;
-    var icon = document.createElement('i'); icon.className = 'ph ph-plus expand-mark'; icon.setAttribute('aria-hidden', 'true');
-    button.appendChild(key); button.appendChild(amount); button.appendChild(icon);
+    var isFeeDetail = !countLabel, icon = document.createElement('i');
+    icon.className = isFeeDetail ? 'ph ph-info detail-info' : 'ph ph-plus expand-mark'; icon.setAttribute('aria-hidden', 'true');
+    if (isFeeDetail) { key.classList.add('detail-info-key'); key.appendChild(icon); }
+    button.appendChild(key); button.appendChild(amount); if (!isFeeDetail) button.appendChild(icon);
     var body = document.createElement('div'); body.className = 'd-fees'; body.id = 'agentDetailSection' + (++agentDetailSeq); body.hidden = true;
     button.setAttribute('aria-expanded', 'false'); button.setAttribute('aria-controls', body.id);
     rows.forEach(function (r) {
@@ -4269,7 +4329,7 @@ Thanks</textarea></div>
   function openAgentDetail(o, trigger, refreshing) {
     var savedScroll = refreshing ? agentDetailPage.querySelector('.detail-scroll').scrollTop : 0;
     agentDetailSelection = o;
-    if (!refreshing) agentDetailEditing = false;
+    if (!refreshing) { agentDetailEditing = false; agentPlanOpen = true; }
     var canEditAgent = o.side === 'mine' && (AG.mine[o.index].me || role === 'team_lead' || role === 'group_lead' || role === 'group_lead_agent') && !isFinalizedStatus(status);
     document.getElementById('agentDetailEdit').hidden = !canEditAgent;
     document.getElementById('agentDetailEdit').setAttribute('aria-pressed', String(agentDetailEditing));
@@ -4284,12 +4344,19 @@ Thanks</textarea></div>
     if (isMine) {
       var agent = AG.mine[o.index], chain = MINE[o.index], schedule = SCHED[o.name],
           share = Math.max(0, Number(agent.allocation == null ? 100 / AG.mine.length : agent.allocation)) / 100;
-      var planLine = ybdRowEl({ k:'Commission plan', v:schedule ? schedule.plan : '80/20 Standard', txt:true, planStatic:true }).firstChild;
-      host.appendChild(planLine);
-      if (agentDetailEditing && schedule) {
-        var planButton = document.createElement('button'); planButton.type = 'button'; planButton.className = planLine.className; planButton.setAttribute('data-plan', o.name);
-        while (planLine.firstChild) planButton.appendChild(planLine.firstChild); planLine.replaceWith(planButton);
-      }
+      var planRows = chain.rows.filter(function (r) { return r.relationships || Object.prototype.hasOwnProperty.call(r, 'caps'); });
+      var planBody = payBodyEl({ id:'agent-detail-plans', name:o.name, rows:planRows });
+      var planToggle = document.createElement('button'); planToggle.type = 'button'; planToggle.className = 'agent-plan-toggle';
+      planToggle.setAttribute('aria-expanded', String(agentPlanOpen)); planToggle.setAttribute('aria-controls', planBody.id);
+      var planTitle = document.createElement('span'); planTitle.textContent = 'Commission plan';
+      var planChevron = document.createElement('i'); planChevron.className = 'ph ph-caret-down'; planChevron.setAttribute('aria-hidden', 'true');
+      planToggle.appendChild(planTitle); planToggle.appendChild(planChevron);
+      planBody.hidden = !agentPlanOpen;
+      planToggle.addEventListener('click', function () {
+        agentPlanOpen = planToggle.getAttribute('aria-expanded') !== 'true';
+        planToggle.setAttribute('aria-expanded', String(agentPlanOpen)); planBody.hidden = !agentPlanOpen;
+      });
+      host.appendChild(planToggle); host.appendChild(planBody);
       var basisRow = chain.rows.filter(function (r) { return r.k === 'Commission basis'; })[0];
       agentDetailDisclosure(host, 'Commission basis', basisRow.det || [], basisRow.v);
       var preRows = DEDS.mine.filter(function (d) { return d.kind === 'presplit'; }).map(function (d) { return { k:d.name, v:neg(d.amt * share), amt:d.amt * share, preDed:d.id }; });
@@ -4306,9 +4373,6 @@ Thanks</textarea></div>
       var commissions = [{ k:'Agent payout', v:cur(chain.net) }, { k:'Radius commission', v:cur(agentRadius) }, { k:'Team commission', v:cur(agentTeam) }, { k:'Group commission', v:cur(agentTeam * groupSplitPct / 100) }];
       agentDetailDisclosure(host, 'Commissions', commissions, cur(chain.net + agentRadius + agentTeam), 'totals');
       agentDetailLine(host, 'Net commission', cur(chain.net)).classList.add('agent-detail-net');
-      var planRows = chain.rows.filter(function (r) { return r.relationships || Object.prototype.hasOwnProperty.call(r, 'caps'); });
-      var planBody = payBodyEl({ id:'agent-detail-plans', name:o.name, rows:planRows });
-      planBody.hidden = false; plans.appendChild(planBody);
       if (agentDetailEditing) {
         host.appendChild(ybdAddBtn('data-addded', 'mine|presplit', 'Add pre-split deduction'));
         host.appendChild(ybdAddBtn('data-addpost', 'post', 'Add post-split deduction'));
@@ -5572,18 +5636,13 @@ Thanks</textarea></div>
     var sk = document.createElement('span'); sk.className = 'sk';
     var nb = document.createElement('b'); nb.textContent = d.name;
     if (d.kind === 'credit' && d.payTo && d.payTo !== 'external') onFile = true, to = PAYTO[d.payTo].to;
-    var em = document.createElement('em');
-    if (onFile) { em.textContent = 'To ' + to; }
-    else {
-      em.className = 'miss';
-      var ic = document.createElement('i'); ic.className = 'ph-fill ph-warning-circle'; ic.setAttribute('aria-hidden', 'true');
-      em.appendChild(ic);
-      em.appendChild(document.createTextNode(to ? 'Wire instructions missing' : 'No payee or wire yet'));
+    if (!onFile) {
+      var ic = document.createElement('i'); ic.className = 'ph ph-prohibit fee-missing'; ic.setAttribute('aria-hidden', 'true');
+      nb.appendChild(ic);
     }
-    sk.appendChild(nb); sk.appendChild(em);
+    sk.appendChild(nb);
     var v = document.createElement('span'); v.className = 'svv neg'; v.textContent = neg(d.amt);
-    var chev = document.createElement('i'); chev.className = 'ph ph-caret-right chev'; chev.setAttribute('aria-hidden', 'true');
-    b.appendChild(sk); b.appendChild(v); b.appendChild(chev);
+    b.appendChild(sk); b.appendChild(v);
     b.setAttribute('aria-label', d.name + ' · ' + neg(d.amt) + ' · '
       + (d.kind === 'presplit' ? 'taken before the split' : 'taken off the top') + ' · edit');
     return b;
