@@ -705,6 +705,16 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .sheet .act .ck { flex:none; width:20px; margin-left:auto; font-size:18px; color:var(--primary); text-align:center; }
 .sheet .act[aria-pressed="false"] .ck { visibility:hidden; }
 .sheet .act[aria-pressed="true"] { background:var(--muted); }
+/* shadcn checkbox pattern for independent agent selection. The static page
+   keeps its existing sheet and data flow while matching shadcn's dark tokens. */
+.sheet .act.agent-pick { min-height:48px; padding:8px 10px; }
+.sheet .act.agent-pick[data-state="checked"] { background:var(--muted); }
+.shadcn-checkbox { appearance:none; -webkit-appearance:none; flex:none; width:16px; height:16px; margin-left:auto; border:1px solid var(--input); border-radius:4px; background:var(--background); color:var(--primary-foreground); display:inline-grid; place-content:center; cursor:pointer; transition:background 150ms ease,border-color 150ms ease; }
+.shadcn-checkbox:hover { border-color:var(--primary); }
+.shadcn-checkbox:checked { border-color:var(--primary); background:var(--primary); }
+.shadcn-checkbox:checked::after { content:''; width:9px; height:9px; background:currentColor; clip-path:polygon(14% 44%,0 65%,40% 100%,100% 16%,84% 0,39% 60%); }
+.shadcn-checkbox:focus-visible { outline:2px solid var(--ring); outline-offset:2px; }
+.shadcn-checkbox:disabled { opacity:.5; cursor:not-allowed; }
 .sheet .sep { height:1px; background:var(--border); margin:6px 10px; }
 .sheet .body { padding:2px 10px 4px; }
 .sheet .rows, .sheet .cms { padding:0 10px; }
@@ -720,6 +730,8 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .sheet textarea { width:100%; min-height:72px; margin-top:8px; padding:8px 12px; border-radius:var(--radius-input); border:1px solid var(--input); background:var(--background); color:var(--foreground); font:400 var(--text-body)/var(--leading-body) var(--font); resize:vertical; box-shadow:var(--shadow-xs); }
 .sheet textarea:focus-visible { outline:2px solid var(--ring); outline-offset:-2px; }
 .sheet label:not(.fld) { display:block; font:600 13px/1.2 var(--font); color:var(--muted-foreground); }
+.sheet label.act.agent-pick { display:flex; align-items:center; gap:12px; width:100%; color:var(--foreground); }
+.sheet label.act.agent-pick .lbl { flex:1; }
 .sheet .note { margin:8px 10px 0; padding:11px 12px; border-radius:var(--radius-md); background:var(--muted); font:500 13px/1.45 var(--font); color:var(--muted-foreground); text-wrap:pretty; }
 
 /* Commission tracker keeps one state visible. Design tweaks owns state switching. */
@@ -5486,17 +5498,16 @@ Thanks</textarea></div>
       hits.forEach(function (a) {
         var held = onSide.indexOf(a.name) > -1;
         var on = !held && agentPick.indexOf(a.name) > -1;
-        var b = document.createElement('button');
-        b.type = 'button'; b.className = 'act';
-        b.setAttribute('aria-pressed', String(on));
-        if (held) { b.disabled = true; b.style.opacity = '.5'; }
-        else b.setAttribute('data-pickagent', a.name);
+        var b = document.createElement('label');
+        b.className = 'act agent-pick'; b.setAttribute('data-state', on ? 'checked' : 'unchecked');
+        if (held) b.style.opacity = '.5';
         var ini = document.createElement('span'); ini.className = 'ini'; ini.textContent = initials(a.name); ini.setAttribute('aria-hidden', 'true');
         var lbl = document.createElement('span'); lbl.className = 'lbl';
         var nb = document.createElement('b'); nb.textContent = a.name;
         var ms = document.createElement('span'); ms.textContent = held ? 'Already on this side' : a.meta;
         lbl.appendChild(nb); lbl.appendChild(ms);
-        var ck = document.createElement('i'); ck.className = 'ph-fill ph-check-circle ck'; ck.setAttribute('aria-hidden', 'true');
+        var ck = document.createElement('input'); ck.type = 'checkbox'; ck.className = 'shadcn-checkbox'; ck.checked = on;
+        ck.disabled = held; ck.setAttribute('data-pickagent', a.name); ck.setAttribute('aria-label', (on ? 'Deselect ' : 'Select ') + a.name);
         b.appendChild(ini); b.appendChild(lbl); b.appendChild(ck);
         host.appendChild(b);
       });
@@ -5532,13 +5543,13 @@ Thanks</textarea></div>
   document.getElementById('agentQClear').addEventListener('click', function () {
     var q = document.getElementById('agentQ'); q.value = ''; renderAgentPicker(); q.focus();
   });
-  document.addEventListener('click', function (e) {
+  document.addEventListener('change', function (e) {
     var b = e.target.closest('[data-pickagent]'); if (!b) return;
     sheetDirty = true;
     var n = b.getAttribute('data-pickagent'), i = agentPick.indexOf(n);
-    if (i > -1) agentPick.splice(i, 1); else agentPick.push(n);
-    /* mutate in place so the pressed row keeps focus through several picks */
-    b.setAttribute('aria-pressed', String(agentPick.indexOf(n) > -1));
+    if (b.checked && i === -1) agentPick.push(n);
+    else if (!b.checked && i > -1) agentPick.splice(i, 1);
+    var row = b.closest('.agent-pick'); if (row) row.setAttribute('data-state', b.checked ? 'checked' : 'unchecked');
     renderAgentPicker(true);
   });
   document.addEventListener('click', function (e) {
@@ -5547,7 +5558,7 @@ Thanks</textarea></div>
     var n = b.getAttribute('data-unpick'), i = agentPick.indexOf(n);
     if (i > -1) agentPick.splice(i, 1);
     var row = document.querySelector('#agentList [data-pickagent="' + n.replace(/"/g, '\\"') + '"]');
-    if (row) row.setAttribute('aria-pressed', 'false');
+    if (row) { row.checked = false; row.closest('.agent-pick').setAttribute('data-state', 'unchecked'); }
     renderAgentPicker(true);
     var chips = document.getElementById('agentPicked').children;
     var next = chips[Math.min(i, chips.length - 1)];
