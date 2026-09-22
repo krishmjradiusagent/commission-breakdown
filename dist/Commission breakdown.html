@@ -4317,19 +4317,22 @@ Thanks</textarea></div>
     }
     key.appendChild(meta);
   }
-  function agentDetailLine(host, label, value, badge, fee) {
+  function agentDetailAmount(value, unsigned) {
+    return unsigned ? String(value).replace(/^[\u2212-]/, '') : value;
+  }
+  function agentDetailLine(host, label, value, badge, fee, unsigned) {
     var row = document.createElement('div'); row.className = 'd';
     var key = document.createElement('span'); key.textContent = label;
     if (badge) { var chip = document.createElement('em'); chip.className = 'split-badge'; chip.textContent = badge; key.appendChild(chip); }
     agentDetailFeeMeta(key, fee);
-    var amount = document.createElement('b'); amount.textContent = value;
+    var amount = document.createElement('b'); amount.textContent = agentDetailAmount(value, unsigned || !!fee);
     row.appendChild(key); row.appendChild(amount); host.appendChild(row); return row;
   }
-  function agentDetailDisclosure(host, label, rows, total, countLabel, fee) {
+  function agentDetailDisclosure(host, label, rows, total, countLabel, fee, unsigned) {
     var button = document.createElement('button'); button.type = 'button'; button.className = 'd grp neg';
     var key = document.createElement('span'); key.textContent = label;
     if (countLabel) { var count = document.createElement('em'); count.textContent = rows.length + ' ' + countLabel; key.appendChild(count); }
-    var amount = document.createElement('b'); amount.textContent = total;
+    var amount = document.createElement('b'); amount.textContent = agentDetailAmount(total, unsigned || !!fee);
     var isFeeDetail = !countLabel && !fee, hasExpandMark = !!countLabel, icon = document.createElement('i');
     icon.className = isFeeDetail ? 'ph ph-info detail-info' : 'ph ph-plus expand-mark'; icon.setAttribute('aria-hidden', 'true');
     if (isFeeDetail) { key.classList.add('detail-info-key'); key.appendChild(icon); }
@@ -4340,7 +4343,7 @@ Thanks</textarea></div>
     rows.forEach(function (r) {
       var target = agentDetailEditing ? ybdFullTarget(r) : null;
       if (target) {
-        var line = agentDetailLine(body, r.k, r.v, r.badge), edit = document.createElement('button'); edit.type = 'button'; edit.className = line.className;
+        var line = agentDetailLine(body, r.k, r.v, r.badge, null, true), edit = document.createElement('button'); edit.type = 'button'; edit.className = line.className;
         while (line.firstChild) edit.appendChild(line.firstChild);
         Object.keys(target).forEach(function (key) { edit.setAttribute(key, target[key]); });
         edit.setAttribute('aria-label', 'Edit ' + r.k); line.replaceWith(edit);
