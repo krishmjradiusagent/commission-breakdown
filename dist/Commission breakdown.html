@@ -1193,6 +1193,11 @@ button.ybd-r:active { opacity:.7; }
 .ybd-det .d-fees { margin:0 0 2px; padding:0 0 4px; }
 .ybd-det .d-fees.basis-fees { margin:0; padding:1px 0; }
 .ybd-det .d-fees .d > .chev { display:none; }
+/* Agent detail reuses fee pills inside a quieter 13px disclosure. Keep inner
+   flex sizing intact; this rule otherwise turns a pill into a full-width row. */
+.agent-detail-page .ybd-det .d-fees .d > span .ybd-fee-meta { flex:0 1 auto; min-width:0; display:inline-flex; align-items:center; gap:5px; flex-wrap:nowrap; }
+.agent-detail-page .ybd-det .d-fees .d > span .paid-by { flex:none; display:inline-flex; align-items:center; gap:4px; width:auto; min-width:0; min-height:20px; padding:2px 7px; border-radius:999px; background:var(--muted); color:var(--muted-foreground); font:500 11px/1 var(--font); white-space:nowrap; }
+.agent-detail-page .ybd-det .d-fees .d > span .paid-by span { flex:none; display:inline; width:auto; min-width:0; color:inherit; font:inherit; white-space:nowrap; }
 /* a collapsed group must never hide a problem */
 .ybd-issues { margin:6px 0 10px; padding:9px 11px; border-radius:var(--radius-md);
   background:rgba(245,158,11,.10); box-shadow:inset 0 0 0 1px rgba(245,158,11,.22); }
@@ -4294,22 +4299,42 @@ Thanks</textarea></div>
   agentDetailPage.setAttribute('aria-modal', 'true'); agentDetailPage.setAttribute('aria-labelledby', 'agentDetailTitle');
   agentDetailPage.innerHTML = '<div class="detail-head"><button class="detail-control" type="button" id="agentDetailBack" aria-label="Back to detailed breakdown"><i class="ph ph-caret-left" aria-hidden="true"></i></button><h2 class="detail-title" id="agentDetailTitle"></h2><button class="detail-control" type="button" id="agentDetailEdit" aria-label="Edit agent breakdown"><i class="ph ph-pencil-simple" aria-hidden="true"></i></button></div><div class="detail-scroll"><p class="ybd-note" id="agentDetailContext"></p><div class="agent-breakdown-content"><div class="ybd-det" id="agentDetailRows"></div></div><div id="agentDetailPlans"></div></div>';
   screenEl.appendChild(agentDetailPage);
-  function agentDetailLine(host, label, value, badge) {
+  /* Agent detail repeats Full breakdown fee meaning: payer pill and private
+     marker stay visible even though calculation lines open independently. */
+  function agentDetailFeeMeta(key, fee) {
+    if (!fee || !fee.post || fee.list !== 'post') return;
+    var meta = document.createElement('span'); meta.className = 'ybd-fee-meta';
+    var paid = document.createElement('span'); paid.className = 'paid-by';
+    paid.setAttribute('aria-label', 'Paid by ' + fee.post.p);
+    var payerIcon = document.createElement('i'); payerIcon.className = 'ph ' + (PAYICON[fee.post.p] || 'ph-user'); payerIcon.setAttribute('aria-hidden', 'true');
+    var payerLabel = document.createElement('span'); payerLabel.textContent = fee.post.p;
+    paid.appendChild(payerIcon); paid.appendChild(payerLabel); meta.appendChild(paid);
+    if (fee.post.private) {
+      var privacy = document.createElement('span'); privacy.className = 'private-fee';
+      privacy.setAttribute('role', 'img'); privacy.setAttribute('aria-label', 'Private fee'); privacy.title = 'Private fee';
+      var lock = document.createElement('i'); lock.className = 'ph ph-lock-simple'; lock.setAttribute('aria-hidden', 'true');
+      privacy.appendChild(lock); meta.appendChild(privacy);
+    }
+    key.appendChild(meta);
+  }
+  function agentDetailLine(host, label, value, badge, fee) {
     var row = document.createElement('div'); row.className = 'd';
     var key = document.createElement('span'); key.textContent = label;
     if (badge) { var chip = document.createElement('em'); chip.className = 'split-badge'; chip.textContent = badge; key.appendChild(chip); }
+    agentDetailFeeMeta(key, fee);
     var amount = document.createElement('b'); amount.textContent = value;
     row.appendChild(key); row.appendChild(amount); host.appendChild(row); return row;
   }
-  function agentDetailDisclosure(host, label, rows, total, countLabel) {
+  function agentDetailDisclosure(host, label, rows, total, countLabel, fee) {
     var button = document.createElement('button'); button.type = 'button'; button.className = 'd grp neg';
     var key = document.createElement('span'); key.textContent = label;
     if (countLabel) { var count = document.createElement('em'); count.textContent = rows.length + ' ' + countLabel; key.appendChild(count); }
     var amount = document.createElement('b'); amount.textContent = total;
-    var isFeeDetail = !countLabel, icon = document.createElement('i');
+    var isFeeDetail = !countLabel && !fee, hasExpandMark = !!countLabel, icon = document.createElement('i');
     icon.className = isFeeDetail ? 'ph ph-info detail-info' : 'ph ph-plus expand-mark'; icon.setAttribute('aria-hidden', 'true');
     if (isFeeDetail) { key.classList.add('detail-info-key'); key.appendChild(icon); }
-    button.appendChild(key); button.appendChild(amount); if (!isFeeDetail) button.appendChild(icon);
+    agentDetailFeeMeta(key, fee);
+    button.appendChild(key); button.appendChild(amount); if (hasExpandMark) button.appendChild(icon);
     var body = document.createElement('div'); body.className = 'd-fees'; body.id = 'agentDetailSection' + (++agentDetailSeq); body.hidden = true;
     button.setAttribute('aria-expanded', 'false'); button.setAttribute('aria-controls', body.id);
     rows.forEach(function (r) {
@@ -4319,8 +4344,8 @@ Thanks</textarea></div>
         while (line.firstChild) edit.appendChild(line.firstChild);
         Object.keys(target).forEach(function (key) { edit.setAttribute(key, target[key]); });
         edit.setAttribute('aria-label', 'Edit ' + r.k); line.replaceWith(edit);
-      } else if (r.det && r.det.length) agentDetailDisclosure(body, r.k, r.det, r.v);
-      else agentDetailLine(body, r.k, r.v, r.badge);
+      } else if (r.det && r.det.length) agentDetailDisclosure(body, r.k, r.det, r.v, null, r);
+      else agentDetailLine(body, r.k, r.v, r.badge, r);
     });
     if (!rows.length) { var empty = document.createElement('p'); empty.className = 'ybd-note'; empty.textContent = 'No ' + label.toLowerCase(); body.appendChild(empty); }
     button.addEventListener('click', function () { toggleYbdInner(button, body, button.getAttribute('aria-expanded') !== 'true'); });
