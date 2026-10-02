@@ -765,16 +765,6 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .sheet .body { padding:2px 10px 4px; }
 .sheet .rows, .sheet .cms { padding:0 10px; }
 .sheet .foot { flex:none; display:flex; gap:10px; padding:12px 10px 4px; background:transparent; }
-.sheet .foot .prim { flex:1; min-height:46px; border:0; border-radius:999px; background:var(--primary); color:#fff; font:600 15px/1 var(--font); cursor:pointer; }
-.sheet .foot .prim:active { transform:scale(.98); }
-.sheet .foot .prim.danger { background:var(--destructive); }
-.sheet .foot .prim:focus-visible { outline:2px solid var(--ring); outline-offset:3px; }
-#feePayerSheet .foot .rds-btn#feePayerAssign, #teamLeadRowSheet .foot .rds-btn#teamLeadRowEdit { flex:1; min-height:46px; height:46px; padding:0 18px; border-radius:999px; border:1px solid rgba(255,255,255,.55); background:rgba(120,120,128,.14); -webkit-backdrop-filter:blur(20px) saturate(180%); backdrop-filter:blur(20px) saturate(180%); box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.06); color:var(--foreground); font:600 15px/1 var(--font); }
-.screen[data-sheet-style="skiper22"] #feePayerSheet .foot .rds-btn#feePayerAssign, .screen[data-sheet-style="skiper22"] #teamLeadRowSheet .foot .rds-btn#teamLeadRowEdit { min-height:48px; height:48px; }
-#feePayerSheet .foot .rds-btn#feePayerAssign:hover:where(:root:not([data-mobile-no-hover]) *), #teamLeadRowSheet .foot .rds-btn#teamLeadRowEdit:hover:where(:root:not([data-mobile-no-hover]) *) { background:rgba(120,120,128,.2); }
-#feePayerSheet .foot .rds-btn#feePayerAssign:active, #teamLeadRowSheet .foot .rds-btn#teamLeadRowEdit:active { transform:scale(.98); }
-#feePayerSheet .foot .rds-btn#feePayerAssign:focus-visible, #teamLeadRowSheet .foot .rds-btn#teamLeadRowEdit:focus-visible { outline:2px solid var(--ring); outline-offset:3px; box-shadow:none; }
-.sheet .foot .full-link { flex:none; min-height:46px; padding:0 14px; border-radius:999px; border:1px solid var(--border); color:var(--foreground); text-decoration:none; display:inline-flex; align-items:center; justify-content:center; font:600 14px/1 var(--font); }
 .activity-compose { flex:none; position:relative; display:flex; align-items:flex-end; gap:8px; margin:8px -2px -4px; padding:10px 2px 2px; background:linear-gradient(to bottom, transparent, var(--card) 20%); }
 .sheet .activity-compose textarea { flex:1; min-width:0; min-height:36px; height:36px; max-height:120px; margin:0; padding:7px 10px; }
 .activity-compose .send { flex:none; width:44px; height:44px; border:0; border-radius:999px; background:var(--primary); color:#fff; font-size:18px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
@@ -844,8 +834,6 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .screen[data-sheet-style="skiper22"] .sheet .sh-close { top:-3px; right:2px; background:transparent; box-shadow:none; }
 .screen[data-sheet-style="skiper22"] .sheet .fields,
 .screen[data-sheet-style="skiper22"] .sheet .rows { border-radius:16px; }
-.screen[data-sheet-style="skiper22"] .sheet .foot .prim { min-height:48px; box-shadow:inset 0 1px 0 rgba(255,255,255,.16); }
-.screen[data-sheet-style="skiper22"] .sheet .foot .prim:active { transform:scale(.975); }
 .screen[data-sheet-style="skiper22"] .sheet.drag { opacity:1; }
 @media (prefers-reduced-motion: reduce) {
   .screen[data-sheet-style="skiper22"] .sheet { transition:none; }
@@ -943,7 +931,6 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 .sheet #dedSheetT { margin-bottom:2px; }
 #dedSheet #dedInfoBtn { position:absolute; top:-3px; right:2px; margin:0; vertical-align:initial; }
 #dedSheet .foot { align-items:center; background:transparent; }
-#dedSheet .foot .rds-btn { min-width:0; height:46px; border-radius:var(--radius-full); font:600 15px/1 var(--font); }
 #dedSheet .foot #dedSave { flex:1 1 auto; }
 #clientCreditSheet { max-height:82%; }
 #clientCreditSheet .sh-name { margin-bottom:2px; }
@@ -959,7 +946,6 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 #clientCreditSheet .cc-payee-input { padding-right:42px; }
 #clientCreditSheet .cc-payee-toggle { position:absolute; top:0; right:0; display:flex; align-items:center; justify-content:center; width:40px; height:36px; border:0; background:transparent; color:var(--muted-foreground); cursor:pointer; }
 #clientCreditSheet .cc-payee-select { position:relative; }
-#clientCreditSheet .foot .rds-btn { flex:1; min-height:46px; border-radius:var(--radius-full); }
 #preSplitFeeSheet { max-height:88%; }
 #preSplitFeeSheet .sh-name { margin-bottom:2px; }
 #preSplitFeeSheet .fields { gap:14px; }
@@ -974,7 +960,6 @@ button.pv.edit:focus-visible { outline:2px solid var(--ring); outline-offset:3px
 #preSplitFeeSheet .psf-choice-row { display:flex; flex-direction:column; gap:8px; padding:0; }
 #preSplitFeeSheet .psf-choice-row .rds-choice { display:flex; align-items:center; gap:var(--space-2); width:100%; min-height:44px; padding:0 2px; }
 #preSplitFeeSheet .rds-checkbox { -webkit-appearance:none; appearance:none; flex:none; }
-#preSplitFeeSheet .foot .rds-btn { flex:1; min-height:46px; border-radius:var(--radius-full); }
 @media (min-width:600px) { #preSplitFeeSheet .psf-grid { grid-template-columns:1fr 1fr; } }
 .ios-alert-backdrop { position:absolute; inset:0; z-index:80; display:grid; place-items:center; padding:24px; background:rgba(0,0,0,.52); }
 .ios-alert { width:min(270px,100%); overflow:hidden; border:1px solid var(--border); border-radius:14px; background:var(--elevated); box-shadow:0 18px 44px rgba(0,0,0,.42); text-align:center; }
@@ -1997,7 +1982,6 @@ body { position:relative; gap:0; }
 .allocation-actions > button { flex:1; }
 #agentAllocSheet .allocation-values label.allocation-remainder { border-style:dashed; opacity:.7; }
 #agentAllocSheet .foot.allocation-actions { display:flex; gap:10px; }
-#agentAllocSheet .foot.allocation-actions .rds-btn { flex:1; height:auto; min-height:46px; padding:0 18px; border-radius:999px; font-size:15px; }
 #agentAllocCancel { background:var(--muted); color:var(--foreground); border:1px solid var(--border); }
 
 .screen .personal-overview #sec-sides .dedrow .sk b { font:500 13px/1.3 var(--font); color:var(--foreground); }
@@ -2694,16 +2678,27 @@ button.tl-line:focus-visible { outline:2px solid var(--ring); outline-offset:-2p
 .screen #transactionSummary .agent-sale-icon { font-size:16px; }
 .screen #sheetBreakdown .sheet-payout-card__icon > i { font-size:16px; line-height:1; }
 
-/* Radius Drawer is contained in the phone preview; component metrics stay unchanged. */
-#reopenPreviewSheet { position:absolute; max-height:90%; }
-#reopenPreviewSheet[hidden] { display:none; }
-#reopenPreviewSheet .rds-drawer__header { display:flex; align-items:center; gap:var(--space-3); }
-#reopenPreviewSheet .rds-drawer__title { flex:1; }
-#reopenPreviewSheet .rds-drawer__header > i { color:var(--tint-amber-fg); }
-#reopenPreviewSheet .rds-drawer__body { display:grid; gap:var(--space-4); }
-#reopenPreviewSheet .rds-drawer__desc { margin:0; }
+/* Reopen uses the same sheet shell, header, scroll region and footer as Add fee. */
+#reopenPreviewSheet .reopen-copy { margin:0; font:var(--font-weight-regular) var(--text-body-sm)/var(--leading-body-sm) var(--font-sans); color:var(--muted-foreground); }
 #reopenPreviewSheet .rds-callout--yellow { --tint-yellow-bg:var(--tint-amber-bg); --tint-yellow-fg:var(--tint-amber-fg); }
-#reopenPreviewSheet .reopen-preview-actions { display:grid; gap:var(--space-2); }
+/* Shared footer: exact existing Add fee control geometry, with Radius tokens. */
+.screen :is(.sheet,#reopenPreviewSheet) .foot { display:flex; align-items:center; gap:var(--space-2-5); }
+.screen :is(.sheet,#reopenPreviewSheet) .foot > .rds-btn {
+  display:inline-flex; align-items:center; justify-content:center; min-width:0;
+  height:46px; min-height:46px; border-radius:var(--radius-full);
+  font:var(--font-weight-semibold) 15px/1 var(--font-sans); padding:0 var(--space-4);
+  box-sizing:border-box; white-space:normal; text-align:center;
+}
+.screen :is(.sheet,#reopenPreviewSheet) .foot > .sheet-action-primary {
+  flex:1; background:var(--primary); color:var(--primary-foreground); border-color:transparent;
+  box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+.screen :is(.sheet,#reopenPreviewSheet) .foot > .sheet-action-secondary {
+  flex:0 0 auto; background:transparent; color:var(--foreground); border:1px solid var(--border);
+  box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+.screen :is(.sheet,#reopenPreviewSheet) .foot > .sheet-action-secondary:only-child { flex:1; }
+.screen :is(.sheet,#reopenPreviewSheet) .foot > .rds-btn[hidden] { display:none; }
 
 </style>
 </head>
@@ -2924,20 +2919,16 @@ button.tl-line:focus-visible { outline:2px solid var(--ring); outline-offset:-2p
     </div>
 
     <div class="scrim" id="scrim"></div>
-    <div class="rds-drawer" id="reopenPreviewSheet" role="dialog" aria-modal="true" aria-labelledby="reopenPreviewTitle" aria-describedby="reopenPreviewCopy reopenPreviewWarning" hidden>
-      <div class="rds-drawer__grip"></div>
-      <div class="rds-drawer__header">
-        <i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>
-        <h2 class="rds-drawer__title" id="reopenPreviewTitle">Reopen finalized breakdown?</h2>
-        <button class="rds-btn rds-btn--ghost rds-btn--icon" type="button" data-reopen-preview-close aria-label="Close reopen finalized breakdown"><i class="ph ph-x" aria-hidden="true"></i></button>
-      </div>
-      <div class="rds-drawer__body">
-        <p class="rds-drawer__desc" id="reopenPreviewCopy">This commission breakdown has already been finalized. Saving your changes will restart the approval workflow — all parties (you, the team lead, and the auditor) will need to review and approve again.</p>
+    <div class="sheet" id="reopenPreviewSheet" role="dialog" aria-modal="true" aria-labelledby="reopenPreviewTitle" aria-describedby="reopenPreviewCopy reopenPreviewWarning" hidden>
+      <div class="grab" aria-hidden="true"></div>
+      <div class="sh-name" id="reopenPreviewTitle" tabindex="-1">Reopen finalized breakdown?</div>
+      <div class="fields">
+        <p class="reopen-copy" id="reopenPreviewCopy">This commission breakdown has already been finalized. Saving your changes will restart the approval workflow — all parties (you, the team lead, and the auditor) will need to review and approve again.</p>
         <div class="rds-callout rds-callout--yellow" id="reopenPreviewWarning"><div class="rds-callout__body"><div class="rds-callout__title">This will void the existing CDA.</div></div></div>
-        <div class="reopen-preview-actions">
-          <button class="rds-btn rds-btn--block" type="button" data-reopen-preview-close>Edit &amp; restart approval</button>
-          <button class="rds-btn rds-btn--outline rds-btn--block" type="button" data-reopen-preview-close>Cancel</button>
-        </div>
+      </div>
+      <div class="foot">
+        <button class="rds-btn rds-btn--outline" type="button" data-reopen-preview-close>Cancel</button>
+        <button class="rds-btn" type="button" data-reopen-preview-close>Edit &amp; restart approval</button>
       </div>
     </div>
 
@@ -6174,6 +6165,35 @@ Thanks</textarea></div>
       node = next;
     }
     sheet.insertBefore(scroller, footer);
+  });
+
+  // Preserve original controls and listeners; normalize footer hierarchy once.
+  document.querySelectorAll('.sheet,#reopenPreviewSheet').forEach(function(sheet) {
+    var footer=Array.from(sheet.children).find(function(child){return child.classList.contains('foot');}) || sheet.querySelector('.foot');
+    if(!footer && !sheet.querySelector('.activity-compose')) {
+      footer=document.createElement('div');footer.className='foot';sheet.appendChild(footer);
+    }
+    if(!footer)return;
+    var buttons=Array.from(footer.querySelectorAll(':scope > button'));
+    var action=buttons.find(function(button){return !/^(Close|Cancel|Done|Got it)$/i.test(button.textContent.trim());});
+    // An existing Edit/Change who pays action is primary; Done remains dismissal.
+    if(action && !buttons.some(function(button){return /^(Close|Cancel|Done)$/i.test(button.textContent.trim());})) {
+      var cancel=document.createElement('button');cancel.type='button';cancel.textContent='Cancel';
+      cancel.addEventListener('click',requestClose);footer.insertBefore(cancel,footer.firstChild);
+      buttons.unshift(cancel);
+    }
+    if(!buttons.length) {
+      var dismiss=document.createElement('button');dismiss.type='button';dismiss.textContent='Close';
+      dismiss.addEventListener('click',requestClose);footer.appendChild(dismiss);buttons.push(dismiss);
+    }
+    buttons.forEach(function(button) {
+      var primary=button===action;
+      button.classList.remove('prim','danger','danger-secondary','rds-btn--block','rds-btn--outline');
+      button.classList.add('rds-btn',primary?'sheet-action-primary':'sheet-action-secondary');
+      if(!primary)button.classList.add('rds-btn--outline');
+    });
+    buttons.filter(function(button){return button!==action;}).forEach(function(button){footer.appendChild(button);});
+    if(action)footer.appendChild(action);
   });
 
   /* every sheet gets a real close control — the grabber is an accelerator, not the only way out */
