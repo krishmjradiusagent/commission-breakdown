@@ -147,3 +147,36 @@ public struct RadiusOfficeView: View {
         }
     }
 }
+
+/// Independent bottom-sheet preview. The host presents it over the existing viewer.
+/// Both actions dismiss the preview; this component never changes approval or CDA data.
+public struct ReopenFinalizedBreakdownSheet: View {
+    public let onDismiss: () -> Void
+    public let fontName: String?
+    public init(fontName: String? = nil, onDismiss: @escaping () -> Void) {
+        self.fontName=fontName; self.onDismiss=onDismiss
+    }
+    private func font(_ size: CGFloat) -> Font { fontName.map { .custom($0,size:size) } ?? .system(size:size) }
+    public var body: some View {
+        VStack(alignment:.leading,spacing:16) {
+            HStack(spacing:12) {
+                Image(systemName:"arrow.counterclockwise").foregroundStyle(Color(red:253/255,green:230/255,blue:138/255))
+                Text("Reopen finalized breakdown?").font(font(18)).fontWeight(.semibold)
+                Spacer()
+                Button(action:onDismiss) { Image(systemName:"xmark") }.accessibilityLabel("Close reopen finalized breakdown")
+            }
+            Text("This commission breakdown has already been finalized. Saving your changes will restart the approval workflow — all parties (you, the team lead, and the auditor) will need to review and approve again.")
+                .font(font(13)).foregroundStyle(Color(red:163/255,green:163/255,blue:163/255))
+            Text("This will void the existing CDA.").font(font(13)).fontWeight(.semibold)
+                .foregroundStyle(Color(red:253/255,green:230/255,blue:138/255))
+                .frame(maxWidth:.infinity,alignment:.leading).padding(.horizontal,16).padding(.vertical,12)
+                .background(Color(red:58/255,green:45/255,blue:12/255),in:RoundedRectangle(cornerRadius:14))
+            Button(action:onDismiss) { Text("Edit & restart approval").frame(maxWidth:.infinity) }.buttonStyle(.borderedProminent)
+            Button(action:onDismiss) { Text("Cancel").frame(maxWidth:.infinity) }.buttonStyle(.bordered)
+        }
+        .font(font(14)).padding(24).foregroundStyle(.white)
+        .tint(Color(red:90/255,green:95/255,blue:242/255))
+        .presentationDetents([.medium,.large]).presentationDragIndicator(.visible)
+        .preferredColorScheme(.dark)
+    }
+}

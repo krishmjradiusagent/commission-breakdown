@@ -130,3 +130,26 @@ private fun FeeRow(row:OfficeRow,editable:Boolean,deletable:Boolean,editing:Bool
         if(!payout) HorizontalDivider(color=Color.White.copy(alpha=.08f))
     }
 }
+
+/** Independent preview over the existing viewer. Both actions dismiss; no workflow mutation. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ReopenFinalizedBreakdownSheet(fontFamily:FontFamily=FontFamily.Default,onDismiss:()->Unit) {
+    MaterialTheme(colorScheme=darkColorScheme(primary=Primary,surface=Surface)) {
+        ModalBottomSheet(onDismissRequest=onDismiss,containerColor=Surface) {
+            CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.copy(fontFamily=fontFamily)) {
+                Column(Modifier.padding(horizontal=24.dp).padding(bottom=24.dp),verticalArrangement=Arrangement.spacedBy(16.dp)) {
+                    Row(verticalAlignment=Alignment.CenterVertically,horizontalArrangement=Arrangement.spacedBy(12.dp)) {
+                        Icon(Icons.Default.Refresh,null,Modifier.size(16.dp),tint=Color(0xFFFDE68A))
+                        Text("Reopen finalized breakdown?",Modifier.weight(1f),fontSize=18.sp,fontWeight=androidx.compose.ui.text.font.FontWeight.SemiBold)
+                        IconButton(onClick=onDismiss) { Icon(Icons.Default.Close,"Close reopen finalized breakdown") }
+                    }
+                    Text("This commission breakdown has already been finalized. Saving your changes will restart the approval workflow — all parties (you, the team lead, and the auditor) will need to review and approve again.",fontSize=13.sp,color=Muted)
+                    Text("This will void the existing CDA.",Modifier.fillMaxWidth().background(Color(0xFF3A2D0C),RoundedCornerShape(14.dp)).padding(horizontal=16.dp,vertical=12.dp),fontSize=13.sp,color=Color(0xFFFDE68A),fontWeight=androidx.compose.ui.text.font.FontWeight.SemiBold)
+                    Button(onClick=onDismiss,modifier=Modifier.fillMaxWidth()) { Text("Edit & restart approval") }
+                    OutlinedButton(onClick=onDismiss,modifier=Modifier.fillMaxWidth()) { Text("Cancel") }
+                }
+            }
+        }
+    }
+}

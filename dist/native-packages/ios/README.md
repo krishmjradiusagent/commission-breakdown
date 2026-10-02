@@ -11,3 +11,5 @@ Requires iOS 17+, Swift 5.9+, and Xcode with an iOS SDK. Genuine SwiftUI; no Web
 The demo reports action callbacks; it does not save fees or connect to a backend. Read STATUS.md before integration. HTML reference and tokens are included under reference/.
 
 Updated October 2, 2026: `mock-data.json` and the personal demo include the neutral-gray Net Payout card. `dual-group.json` and `dual-team.json` show side grouping, muted calculator icons, semantic amounts, and final payout cards; pass these snapshots through your host adapter. Team fixture preserves the HTML reference total of $19,000 although displayed rows sum to $23,500; do not use this fixture for authoritative accounting. All HTML routes and runtime assets in `reference/` match current local dist. The source is still a partial native preview; see STATUS.md.
+
+Reopen finalized breakdown preview: Present ReopenFinalizedBreakdownSheet from your host using a sheet and supply onDismiss; keep the existing screen underneath. Both buttons dismiss this independent design preview. It does not restart approvals or void a CDA.

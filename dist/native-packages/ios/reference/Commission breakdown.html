@@ -2694,6 +2694,17 @@ button.tl-line:focus-visible { outline:2px solid var(--ring); outline-offset:-2p
 .screen #transactionSummary .agent-sale-icon { font-size:16px; }
 .screen #sheetBreakdown .sheet-payout-card__icon > i { font-size:16px; line-height:1; }
 
+/* Radius Drawer is contained in the phone preview; component metrics stay unchanged. */
+#reopenPreviewSheet { position:absolute; max-height:90%; }
+#reopenPreviewSheet[hidden] { display:none; }
+#reopenPreviewSheet .rds-drawer__header { display:flex; align-items:center; gap:var(--space-3); }
+#reopenPreviewSheet .rds-drawer__title { flex:1; }
+#reopenPreviewSheet .rds-drawer__header > i { color:var(--tint-amber-fg); }
+#reopenPreviewSheet .rds-drawer__body { display:grid; gap:var(--space-4); }
+#reopenPreviewSheet .rds-drawer__desc { margin:0; }
+#reopenPreviewSheet .rds-callout--yellow { --tint-yellow-bg:var(--tint-amber-bg); --tint-yellow-fg:var(--tint-amber-fg); }
+#reopenPreviewSheet .reopen-preview-actions { display:grid; gap:var(--space-2); }
+
 </style>
 </head>
 <body>
@@ -2913,6 +2924,22 @@ button.tl-line:focus-visible { outline:2px solid var(--ring); outline-offset:-2p
     </div>
 
     <div class="scrim" id="scrim"></div>
+    <div class="rds-drawer" id="reopenPreviewSheet" role="dialog" aria-modal="true" aria-labelledby="reopenPreviewTitle" aria-describedby="reopenPreviewCopy reopenPreviewWarning" hidden>
+      <div class="rds-drawer__grip"></div>
+      <div class="rds-drawer__header">
+        <i class="ph ph-arrow-counter-clockwise" aria-hidden="true"></i>
+        <h2 class="rds-drawer__title" id="reopenPreviewTitle">Reopen finalized breakdown?</h2>
+        <button class="rds-btn rds-btn--ghost rds-btn--icon" type="button" data-reopen-preview-close aria-label="Close reopen finalized breakdown"><i class="ph ph-x" aria-hidden="true"></i></button>
+      </div>
+      <div class="rds-drawer__body">
+        <p class="rds-drawer__desc" id="reopenPreviewCopy">This commission breakdown has already been finalized. Saving your changes will restart the approval workflow — all parties (you, the team lead, and the auditor) will need to review and approve again.</p>
+        <div class="rds-callout rds-callout--yellow" id="reopenPreviewWarning"><div class="rds-callout__body"><div class="rds-callout__title">This will void the existing CDA.</div></div></div>
+        <div class="reopen-preview-actions">
+          <button class="rds-btn rds-btn--block" type="button" data-reopen-preview-close>Edit &amp; restart approval</button>
+          <button class="rds-btn rds-btn--outline rds-btn--block" type="button" data-reopen-preview-close>Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Send CDA is a full-page task, not a popup. -->
     <div class="cda-send-page" id="cdaSendPage" role="dialog" aria-modal="true" aria-labelledby="cdaSendTitle" hidden>
@@ -3483,6 +3510,7 @@ Thanks</textarea></div>
       <button class="sp-b" type="button" data-sheet-team-personal>Team lead + agent · Ally</button>
       <button class="sp-b" type="button" data-sheet-team-dual>Team lead + Agent Ally · Listing + Buying</button>
       <button class="sp-b" type="button" data-setrole="dual_role" aria-pressed="false"><i class="ph ph-arrows-left-right" aria-hidden="true"></i><span class="sp-role-copy"><span class="sp-role-name">Dual role</span><em>Agent Ally · Listing + Buying</em></span></button>
+      <button class="sp-b" type="button" id="reopenPreviewTweak">Reopen finalized breakdown bottom sheet</button>
     </div>
     <div class="sp-grp">
       <span class="sp-k">Status</span>
@@ -8799,6 +8827,16 @@ Thanks</textarea></div>
      reinitiate: the deal is finalized and the CDA exists \u2014 reopening it throws the whole
      chain back to the start, so it lands on draft and everyone confirms again. */
   var returnSheetEl = document.getElementById('returnSheet');
+  // Independent visual preview; it does not mutate approvals or CDA state.
+  document.getElementById('reopenPreviewTweak').addEventListener('click',function(event) {
+    close(true);
+    document.getElementById('tweaksPopover').hidden=true;
+    document.getElementById('tweaksTrigger').setAttribute('aria-expanded','false');
+    open(document.getElementById('reopenPreviewSheet'),event.currentTarget);
+  });
+  document.querySelectorAll('[data-reopen-preview-close]').forEach(function(button) {
+    button.addEventListener('click',function(){close();document.getElementById('tweaksTrigger').focus();});
+  });
   function openSheetAs(mode, trigger) {
     sheetMode = mode;
     var reinit = mode === 'reinit';
