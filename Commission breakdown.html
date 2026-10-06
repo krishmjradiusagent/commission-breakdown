@@ -2703,9 +2703,18 @@ button.tl-line:focus-visible { outline:2px solid var(--ring); outline-offset:-2p
 
 /* Fee editor composes Radius primitives; only layout and upward placement are local. */
 .fee-person-fields { display:flex; flex-direction:column; gap:var(--space-3); }
-#dedSheet .fee-person-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,100px); align-items:center; gap:var(--space-3); }
+#dedSheet .fee-person-row { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,76px) 16px minmax(0,92px); align-items:center; gap:var(--space-2); }
 .fee-person-copy { display:flex; flex-direction:column; gap:var(--space-1); min-width:0; font:var(--font-weight-medium) var(--text-body)/var(--leading-body) var(--font-sans); }
 .fee-editor-hint,.fee-person-copy small { color:var(--muted-foreground); font:var(--font-weight-regular) var(--text-caption)/var(--leading-caption) var(--font-sans); }
+#dedSheet .fee-person-row .rds-input-group { min-width:0; }
+#dedSheet .fee-person-row .rds-input-group > input { padding-inline:var(--space-2); text-align:right; font-variant-numeric:tabular-nums; }
+#dedSheet .fee-person-row .rds-input-group__addon { padding-inline:var(--space-2); }
+.fee-person-sync { color:var(--muted-foreground); font-size:16px; line-height:1; text-align:center; }
+@media (max-width:390px) {
+  #dedSheet .fee-person-row { grid-template-columns:minmax(0,1fr) minmax(0,70px) 14px minmax(0,82px); gap:var(--space-1-5); }
+  #dedSheet .fee-person-row .rds-input-group > input { padding-inline:var(--space-1-5); }
+  #dedSheet .fee-person-row .rds-input-group__addon { padding-inline:var(--space-1-5); }
+}
 .fee-tier { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--space-2); padding-block:var(--space-3); border-top:1px solid var(--border); }
 .fee-tier label.rds-field { display:flex; flex-direction:column; gap:var(--space-1-5); min-width:0; font:var(--font-weight-medium) var(--text-body)/var(--leading-body) var(--font-sans); color:var(--foreground); }
 /* Requested dark off-state: Radius Switch currently hardcodes its light track. */
@@ -10108,6 +10117,23 @@ Thanks</textarea></div>
   function feeInputValue(payer) {
     return Math.max(0, Number(document.getElementById('fee' + payer + 'Pct').value) || 0) / 100;
   }
+  function feeEditorAmount() {
+    return Math.max(0, Number(String(document.getElementById('dedAmt').value).replace(/[^0-9.]/g, '')) || 0);
+  }
+  function feeShareAmount(person) {
+    return feeEditorAmount() * Math.max(0, Number(person.pct) || 0) / 100;
+  }
+  function formatFeeShareAmount(amount) {
+    return amount > 0 ? amount.toFixed(2) : '0.00';
+  }
+  function syncFeeShareAmounts(skipIndex) {
+    var total=feeEditorAmount();
+    document.querySelectorAll('[data-person-fee]').forEach(function(input){
+      var index=Number(input.dataset.personFee), person=dedCtx && dedCtx.people && dedCtx.people[index];
+      input.disabled=total<=0;
+      if(person && index!==skipIndex)input.value=total>0?formatFeeShareAmount(feeShareAmount(person)):'';
+    });
+  }
   function draftFeeTotalAmount() {
     var amount = Math.max(0, Number(String(document.getElementById('dedAmt').value).replace(/[^0-9.]/g, '')) || 0),
         payers = feePayers(dedCtx && dedCtx.p), mode = dedCtx && dedCtx.agentDistribution;
@@ -10151,12 +10177,13 @@ Thanks</textarea></div>
     });
     syncFeePeople();renderFeePeople();
   }
-  function syncFeePeople() {
+  function syncFeePeople(skipAmountIndex) {
     var sums={Agent:0,Team:0,Group:0}, selected=feeSelectedPeople(), roles=[];
     selected.forEach(function(p){var k=p.role==='Agent'?'Agent':p.key;sums[k]+=Number(p.pct)||0;if(roles.indexOf(k)<0)roles.push(k);});
     dedCtx.p=['Agent','Team','Group'].filter(function(k){return roles.indexOf(k)>=0;}).join(' + ');
     Object.keys(sums).forEach(function(k){document.getElementById('fee'+k+'Pct').value=String(sums[k]);});
     updateFeeSplitSummary();
+    syncFeeShareAmounts(skipAmountIndex);
     document.getElementById('dedSave').disabled=!selected.length || selected.some(function(p){return p.pct==='' || !Number.isFinite(Number(p.pct)) || Number(p.pct)<=0 || Number(p.pct)>100;}) || Math.abs(selected.reduce(function(n,p){return n+(Number(p.pct)||0);},0)-100)>0.001;
   }
   function renderFeePeople() {
@@ -10171,11 +10198,19 @@ Thanks</textarea></div>
       }
       if(!p.selected)return;
       var label=document.createElement('label');label.className='fee-person-row';
-      var copy=document.createElement('span');copy.className='fee-person-copy';copy.textContent=p.name;
+      var copy=document.createElement('span');copy.className='fee-person-copy';
+      var name=document.createElement('span');name.textContent=p.name;
+      var role=document.createElement('small');role.textContent=p.role;
+      copy.append(name,role);
       label.appendChild(copy);
-      var group=document.createElement('span');group.className='rds-input-group';
-      var input=document.createElement('input');input.type='text';input.inputMode='decimal';input.value=p.pct;input.placeholder='0';input.setAttribute('aria-label',p.name+' '+p.role+' percentage');input.setAttribute('data-person-share',index);
-      var unit=document.createElement('span');unit.className='rds-input-group__addon';unit.textContent='%';group.append(input,unit);label.appendChild(group);fields.appendChild(label);
+      var percentGroup=document.createElement('span');percentGroup.className='rds-input-group';
+      var percentInput=document.createElement('input');percentInput.type='text';percentInput.inputMode='decimal';percentInput.value=p.pct;percentInput.placeholder='0';percentInput.setAttribute('aria-label',p.name+' '+p.role+' percentage');percentInput.setAttribute('data-person-share',index);
+      var percentUnit=document.createElement('span');percentUnit.className='rds-input-group__addon';percentUnit.textContent='%';percentGroup.append(percentInput,percentUnit);label.appendChild(percentGroup);
+      var syncIcon=document.createElement('i');syncIcon.className='ph ph-arrows-left-right fee-person-sync';syncIcon.setAttribute('aria-hidden','true');label.appendChild(syncIcon);
+      var amountGroup=document.createElement('span');amountGroup.className='rds-input-group';
+      var amountUnit=document.createElement('span');amountUnit.className='rds-input-group__addon';amountUnit.textContent='$';
+      var amountInput=document.createElement('input');amountInput.type='text';amountInput.inputMode='decimal';amountInput.value=feeEditorAmount()>0?formatFeeShareAmount(feeShareAmount(p)):'';amountInput.placeholder='0.00';amountInput.disabled=feeEditorAmount()<=0;amountInput.setAttribute('aria-label',p.name+' '+p.role+' fee amount');amountInput.setAttribute('data-person-fee',index);
+      amountGroup.append(amountUnit,amountInput);label.appendChild(amountGroup);fields.appendChild(label);
     });
     if(!list.children.length){var empty=document.createElement('div');empty.className='rds-command__empty';empty.textContent='No people found';list.appendChild(empty);}
     document.getElementById('feeSharesSection').hidden=false;fields.hidden=false;
@@ -10210,7 +10245,19 @@ Thanks</textarea></div>
   }
   document.getElementById('ddFeePayerBtn').addEventListener('input',function(){if(!dedCtx || dedCtx.kind!=='fee')return;renderFeePeople();openDD(document.getElementById('ddFeePayer'),false);});
   document.getElementById('ddFeePayerBtn').addEventListener('keydown',function(e){if(e.key==='Escape'){e.stopPropagation();closeDD(document.getElementById('ddFeePayer'));}});
-  document.getElementById('fFeeShares').addEventListener('input',function(e){if(!e.target.hasAttribute('data-person-share'))return;dedCtx.people[Number(e.target.dataset.personShare)].pct=e.target.value;syncFeePeople();});
+  document.getElementById('fFeeShares').addEventListener('input',function(e){
+    var index;
+    if(e.target.hasAttribute('data-person-share')){index=Number(e.target.dataset.personShare);dedCtx.people[index].pct=e.target.value;syncFeePeople();return;}
+    if(!e.target.hasAttribute('data-person-fee'))return;
+    index=Number(e.target.dataset.personFee);
+    var total=feeEditorAmount();
+    if(total<=0)return;
+    dedCtx.people[index].pct=String(Math.max(0,Number(String(e.target.value).replace(/[^0-9.]/g,''))||0)/total*100);
+    syncFeePeople(index);
+    var percentInput=document.querySelector('[data-person-share="'+index+'"]');
+    if(percentInput)percentInput.value=(Math.round(Number(dedCtx.people[index].pct)*100)/100).toString();
+  });
+  document.getElementById('fFeeShares').addEventListener('change',function(e){if(!e.target.hasAttribute('data-person-fee'))return;var index=Number(e.target.dataset.personFee), person=dedCtx.people[index];e.target.value=feeEditorAmount()>0?formatFeeShareAmount(feeShareAmount(person)):'';});
   document.getElementById('feeSliding').addEventListener('change',function(){dedCtx.slidingScale=this.checked;if(this.checked && !dedCtx.tiers.length)dedCtx.tiers.push({from:'0',to:'',value:''});renderFeeTiers();});
   document.getElementById('feeAddTier').addEventListener('click',function(){var last=dedCtx.tiers[dedCtx.tiers.length-1];dedCtx.tiers.push({from:last?last.to:'0',to:'',value:''});sheetDirty=true;renderFeeTiers();});
   document.getElementById('feeTierRows').addEventListener('input',function(e){if(e.target.dataset.tierField)dedCtx.tiers[Number(e.target.dataset.tierIndex)][e.target.dataset.tierField]=e.target.value;});
@@ -10233,7 +10280,8 @@ Thanks</textarea></div>
     if (fp) { setFeePayer(fp.getAttribute('data-feepayer')); closeDD(document.getElementById('ddFeePayer')); }
     if (fs) setFeeStage(fs.getAttribute('data-feestage'));
   });
-  ['dedAmt', 'feeAgentPct', 'feeTeamPct', 'feeGroupPct'].forEach(function (id) {
+  document.getElementById('dedAmt').addEventListener('input', function(){updateFeeSplitSummary();syncFeeShareAmounts();});
+  ['feeAgentPct', 'feeTeamPct', 'feeGroupPct'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateFeeSplitSummary);
   });
   /* fees after the split: same sheet, name + amount only (paid-by is fixed by the fee) */
