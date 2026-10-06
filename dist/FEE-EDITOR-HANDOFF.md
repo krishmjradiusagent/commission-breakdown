@@ -46,7 +46,7 @@ Existing surrounding commission cards, credits/referrals, permission rules, wire
 | Who pays? | Search by name or role; current side's eligible agent/co-agents, team lead, group lead |
 | Selected people | One name + manual percentage input per selection; no repetitive role subtext |
 | Total shares | Label left/value right in bordered Item; hide for one payer at 100%; show red invalid total |
-| Co-agent splits | Visible when two or more agents are selected; upward single-select dropdown |
+| Co-agent splits | Always visible in Add/Edit fee, including one or no selected agents; upward single-select dropdown. Applies to selected agents only. |
 | Deal side | Only when the existing context permits switching sides; use server side IDs in production |
 | Fee timing | No visible Apply fee selector. Preserve existing fee timing on edit; new fees use the existing entry-point default. |
 | Payable to | Existing Radius / team-group / external choices; actual eligible recipients from backend |

@@ -10190,8 +10190,7 @@ Thanks</textarea></div>
     });
     if(!list.children.length){var empty=document.createElement('div');empty.className='rds-command__empty';empty.textContent='No people found';list.appendChild(empty);}
     document.getElementById('feeSharesSection').hidden=false;fields.hidden=false;
-    var count=feeSelectedPeople().filter(function(p){return p.role==='Agent';}).length;
-    document.getElementById('feeCoAgentField').hidden=count<2;
+    document.getElementById('feeCoAgentField').hidden=false;
     var mode=dedCtx.agentDistribution || 'equal', labels={each:'Each agent pays',equal:'Split equally',allocation:'Proportionate to allocation'};
     document.getElementById('feeCoAgentValue').textContent=labels[mode];
     document.querySelectorAll('[data-fee-distribution]').forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.feeDistribution===mode));});
